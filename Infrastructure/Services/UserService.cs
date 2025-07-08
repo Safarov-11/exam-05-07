@@ -95,8 +95,10 @@ public class UserService(UserManager<IdentityUser> userManager, RoleManager<Iden
         return new Response<List<UserDTO>>(users);
     }
 
-    public async Task<Response<List<UserDTO>>> GetUsersAsync(UserFilter filter)
+    public async Task<PagedResponse<List<UserDTO>>> GetUsersAsync(UserFilter filter)
     {
+        var validFilter = new ValidFilter(filter.PageSize, filter.PageNumber);
+
         var query = userManager.Users;
         if (!string.IsNullOrWhiteSpace(filter.Email))
         {
@@ -116,7 +118,12 @@ public class UserService(UserManager<IdentityUser> userManager, RoleManager<Iden
             PhoneNumber = us.PhoneNumber!
         }).ToListAsync();
 
-        return new Response<List<UserDTO>>(users);
+        var totalRecords = users.Count;
+        var paged = users
+        .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+        .Take(validFilter.PageSize).ToList();
+
+        return new PagedResponse<List<UserDTO>>(paged, validFilter.PageSize, validFilter.PageNumber, totalRecords);
     }
 
 }

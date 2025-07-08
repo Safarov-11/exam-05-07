@@ -10,5 +10,5 @@ public interface IUserService
     public Task<Response<bool>> DeleteUserAsync(string id);
     public Task<Response<UserDTO?>> GetUserAsync(string id);
     public Task<Response<List<UserDTO>>> GetUsersAsync();
-    public Task<Response<List<UserDTO>>> GetUsersAsync(UserFilter filter);
+    public Task<PagedResponse<List<UserDTO>>> GetUsersAsync(UserFilter filter);
 }

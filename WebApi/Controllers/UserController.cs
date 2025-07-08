@@ -19,14 +19,8 @@ public class UserController(IUserService userService) : ControllerBase
         return await userService.GetUserAsync(id);
     }
 
-    [HttpGet]
-    public async Task<Response<List<UserDTO>>> GetUsersAsync()
-    {
-        return await userService.GetUsersAsync();
-    }
-
     [HttpGet("byte-filters")]
-    public async Task<Response<List<UserDTO>>> GetUsersAsync(UserFilter filter)
+    public async Task<PagedResponse<List<UserDTO>>> GetUsersAsync([FromQuery]UserFilter filter)
     {
         return await userService.GetUsersAsync(filter);
     }
